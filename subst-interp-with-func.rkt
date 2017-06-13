@@ -53,8 +53,8 @@
               (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))
       100)
 
-(test (interp (appC 'square
+(test (interp (appC 'double
                     (numC (interp (appC 'square (numC 10))
                                   (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))))
-              (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))
-      10000)
+              (list (fdC 'double 'x (multC (numC 2) (idC 'x)))))
+      200)
