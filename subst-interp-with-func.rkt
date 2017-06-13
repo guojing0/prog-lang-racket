@@ -23,7 +23,7 @@
     [appC (f a) (appC f (subst what for a))]
     [plusC (l r) (plusC (subst what for l)
                         (subst what for r))]
-    [multC (l r) (plusC (subst what for l)
+    [multC (l r) (multC (subst what for l)
                         (subst what for r))]))
 
 (define (get-fundef [n : symbol] [fds : (listof FunDefC)]) : FunDefC
@@ -40,8 +40,21 @@
     [numC (n) n]
     [idC (_) (error 'interp "should not get here!")]
     [appC (f a) (local ([define fd (get-fundef f fds)])
-                  (interp (subst a (fdC-arg fd) (fdC-body fd))
+                  (interp (subst a
+                                 (fdC-arg fd)
+                                 (fdC-body fd))
                           fds))]
     [plusC (l r) (+ (interp l fds) (interp r fds))]
     [multC (l r) (* (interp l fds) (interp r fds))]))
 
+;;; tests
+
+(test (interp (appC 'square (numC 10))
+              (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))
+      100)
+
+(test (interp (appC 'square
+                    (numC (interp (appC 'square (numC 10))
+                                  (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))))
+              (list (fdC 'square 'x (multC (idC 'x) (idC 'x)))))
+      10000)
