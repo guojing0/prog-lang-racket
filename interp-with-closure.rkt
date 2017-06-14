@@ -68,3 +68,11 @@
                (numC 2))
               mt-env)
       (numV 1000))
+
+(test (interp (appC (lamC 'x
+                          (appC (lamC 'y
+                                      (plusC (idC 'x) (idC 'y)))
+                                (numC 10)))
+                    (numC 20))
+              mt-env)
+      (numV 30))
