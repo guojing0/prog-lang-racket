@@ -32,6 +32,18 @@
              (bind-val (first env))]
             [else (lookup exp (rest env))])]))
 
+(define (num+ [l : Value] [r : Value]) : Value
+  (cond
+    [(and (numV? l) (numV? r))
+     (numV (+ (numV-n l) (numV-n r)))]
+    [else (error 'num+ "one argument was not a number")]))
+
+(define (num* [l : Value] [r : Value]) : Value
+  (cond
+    [(and (numV? l) (numV? r))
+     (numV (* (numV-n l) (numV-n r)))]
+    [else (error 'num* "one argument was not a number")]))
+
 ;;; interpreter
 
 (define (interp [expr : ExprC] [env : Env]) : Value
@@ -46,18 +58,6 @@
     [plusC (l r) (num+ (interp l env) (interp r env))]
     [multC (l r) (num* (interp l env) (interp r env))]
     [lamC (a b) (closV a b env)]))
-
-(define (num+ [l : Value] [r : Value]) : Value
-  (cond
-    [(and (numV? l) (numV? r))
-     (numV (+ (numV-n l) (numV-n r)))]
-    [else (error 'num+ "one argument was not a number")]))
-
-(define (num* [l : Value] [r : Value]) : Value
-  (cond
-    [(and (numV? l) (numV? r))
-     (numV (* (numV-n l) (numV-n r)))]
-    [else (error 'num* "one argument was not a number")]))
 
 ;;; tests
 
